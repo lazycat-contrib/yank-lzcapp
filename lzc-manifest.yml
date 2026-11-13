@@ -1,0 +1,40 @@
+application:
+  subdomain: yank
+  multi_instance: false
+  public_path:
+    - /
+  upstreams:
+    - location: /
+      backend: http://yank:7219/
+  ingress:
+    - port: 7220
+      protocol: tcp
+
+services:
+  yank:
+    # ghcr.io/ca-x/yank:0.2.0
+    image: registry.lazycat.cloud/czyt/ca-x/yank:PLACEHOLDER
+    environment:
+      - YANK_BIND=0.0.0.0:7219
+      - YANK_DB=/data/yank-server.sqlite3
+      - YANK_ADMIN_USERNAME={{ .U.admin_user }}
+      - YANK_ADMIN_PASSWORD={{ .U.admin_pass }}
+      - YANK_PUBLIC_URL=https://yank.{{ .S.AppDomain }}
+      - YANK_RELAY_URL=http://yank.{{ .S.AppDomain }}:7220
+      - YANK_COOKIE_SECURE=true
+      - YANK_RELAY_BIND=0.0.0.0:7220
+    binds:
+      - /lzcapp/var/data:/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl -fsS http://127.0.0.1:7219/api/health || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+usage: |
+  管理台即应用首页：用部署时设置的管理员账号登录，创建成员账号。
+  客户端（桌面/手机 yank）连接地址填 https://yank.<应用域名>，中继地址填 http://yank.<应用域名>:7220（TCP 直通）。
+  剪贴板内容端到端加密；服务端存储为可选项。

@@ -1,0 +1,20 @@
+params:
+  - id: admin_user
+    type: string
+    name: "Admin username"
+    description: "Initial administrator account created on first boot."
+    default_value: "admin"
+  - id: admin_pass
+    type: secret
+    name: "Admin password"
+    description: "Initial administrator password (required on first boot; can be changed later in the admin UI)."
+    default_value: "$random(len=20)"
+
+locales:
+  zh:
+    admin_user:
+      name: "管理员用户名"
+      description: "首次启动创建的管理员账号。"
+    admin_pass:
+      name: "管理员密码"
+      description: "首次启动必需的管理员密码（之后可在管理台修改），随机默认值。"
