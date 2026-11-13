@@ -9,11 +9,11 @@ application:
   ingress:
     - port: 7220
       protocol: tcp
-
 services:
   yank:
     # ghcr.io/ca-x/yank:0.2.0
-    image: registry.lazycat.cloud/czyt/ca-x/yank:PLACEHOLDER
+    # upstream: ghcr.io/ca-x/yank:v0.2.0
+    image: ghcr.1ms.run/ca-x/yank:v0.2.0
     environment:
       - YANK_BIND=0.0.0.0:7219
       - YANK_DB=/data/yank-server.sqlite3
@@ -33,7 +33,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
-
 usage: |
   管理台即应用首页：用部署时设置的管理员账号登录，创建成员账号。
   客户端（桌面/手机 yank）连接地址填 https://yank.<应用域名>，中继地址填 http://yank.<应用域名>:7220（TCP 直通）。
